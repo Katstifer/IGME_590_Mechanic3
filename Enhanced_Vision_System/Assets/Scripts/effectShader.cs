@@ -6,10 +6,9 @@ public class effectShader : MonoBehaviour
 
     [SerializeField] private string tagName;
     [SerializeField] private string effectLayerID;
+    [SerializeField] private string defaultLayerID = "Default";
 
     private bool isActive = false;
-
-    private string defaultLayerID;
 
     GameObject[] objects;
 
@@ -32,7 +31,7 @@ public class effectShader : MonoBehaviour
 
     public bool IsActive()
     {
-        return isActive; 
+        return isActive;
     }
 
     public void findGameObjects(string tagName)
@@ -54,7 +53,24 @@ public class effectShader : MonoBehaviour
             return;
         }
 
-        print("Disabling shader for " + tagName);
+
+        int targetLayer = LayerMask.NameToLayer(defaultLayerID);
+        findGameObjects(tagName);
+
+        if (objects.Length <= 0)
+        {
+            print("Can't find objects with tag.");
+            return;
+        }
+
+        if (targetLayer != -1)
+        {
+            foreach (GameObject obj in objects)
+            {
+                obj.layer = targetLayer;
+            }
+        }
+
         isActive = false;
     }
 
@@ -68,6 +84,24 @@ public class effectShader : MonoBehaviour
         }
 
         print("Enabling shader for " + tagName);
+
+        int targetLayer = LayerMask.NameToLayer(effectLayerID);
+        findGameObjects(tagName);
+
+        if (objects.Length <= 0)
+        {
+            print("Can't find objects with tag.");
+            return;
+        }
+
+        if (targetLayer != -1)
+        {
+            foreach (GameObject obj in objects)
+            {
+                obj.layer = targetLayer;
+            }
+        }
+
         isActive = true;
     }
 }

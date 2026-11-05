@@ -20,7 +20,15 @@ public class shaderManager : MonoBehaviour
 
     private void Awake()
     {
-        InputActionMap shaderInput = InputSystem.actions.FindActionMap("EnhancedVision");
+        PlayerInput playerInput = GetComponent<PlayerInput>();
+        playerInput.SwitchCurrentActionMap("EnhancedVision");
+
+        InputActionMap shaderInput = playerInput.actions.FindActionMap("EnhancedVision");
+
+        if (!shaderInput.enabled)
+        {
+            shaderInput.Enable(); 
+        }
 
         toggleAction = shaderInput.FindAction("ToggleShader");
         rotateAction = shaderInput.FindAction("RotateShader");
