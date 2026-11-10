@@ -44,8 +44,8 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: layer_yellowGlow
+    uniqueID: 2120013207
+    locked: 0
   m_RenderingLayers:
   - Default
-  - layer_YelllowGlow
-  - layer_BlueGlow
-  - layer_RedOutline

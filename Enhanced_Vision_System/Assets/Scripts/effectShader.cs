@@ -4,36 +4,40 @@ using UnityEngine;
 public class effectShader : MonoBehaviour
 {
 
+    //Tag that shader searches for to apply materials to
     [SerializeField] private string tagName;
-    [SerializeField] private string effectLayerID;
-    [SerializeField] private string defaultLayerID = "Default";
 
+    //Material to apply to found objects
+    [SerializeField] private Material shaderMaterial;
+
+    //Default material to return objects to once the shader is disabled.
+    [SerializeField] private Material defaultMaterial; 
+
+    //Whether the shader is currently active
     private bool isActive = false;
 
+    //List of objects with specified tag
     GameObject[] objects;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        isActive = false;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
+    //Gets the tag name that this shader should be applied to objects with
     public string GetTagName()
     {
         return tagName;
     }
 
+    //Is the shader active/currently applied
     public bool IsActive()
     {
         return isActive;
     }
 
+    //Finds game objects that have the right tag
     public void findGameObjects(string tagName)
     {
         objects = GameObject.FindGameObjectsWithTag(tagName);
@@ -42,6 +46,8 @@ public class effectShader : MonoBehaviour
         {
             print("No objects found with tagName: " + tagName);
         }
+
+        print("Found objects: " + objects);
     }
 
     //Disables shader on object with matching tagName
@@ -53,8 +59,6 @@ public class effectShader : MonoBehaviour
             return;
         }
 
-
-        int targetLayer = LayerMask.NameToLayer(defaultLayerID);
         findGameObjects(tagName);
 
         if (objects.Length <= 0)
@@ -63,12 +67,11 @@ public class effectShader : MonoBehaviour
             return;
         }
 
-        if (targetLayer != -1)
+        foreach (GameObject obj in objects)
         {
-            foreach (GameObject obj in objects)
-            {
-                obj.layer = targetLayer;
-            }
+            SpriteRenderer sr = obj.GetComponent<SpriteRenderer>(); 
+
+            sr.material = shaderMaterial; 
         }
 
         isActive = false;
@@ -82,10 +85,7 @@ public class effectShader : MonoBehaviour
             print("Shader is already enabled, skipping method.");
             return;
         }
-
-        print("Enabling shader for " + tagName);
-
-        int targetLayer = LayerMask.NameToLayer(effectLayerID);
+        
         findGameObjects(tagName);
 
         if (objects.Length <= 0)
@@ -94,12 +94,11 @@ public class effectShader : MonoBehaviour
             return;
         }
 
-        if (targetLayer != -1)
+        foreach (GameObject obj in objects)
         {
-            foreach (GameObject obj in objects)
-            {
-                obj.layer = targetLayer;
-            }
+            SpriteRenderer sr = obj.GetComponent<SpriteRenderer>(); 
+
+            sr.material = defaultMaterial; 
         }
 
         isActive = true;
