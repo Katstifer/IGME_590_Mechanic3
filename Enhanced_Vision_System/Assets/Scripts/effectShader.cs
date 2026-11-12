@@ -11,7 +11,7 @@ public class effectShader : MonoBehaviour
     [SerializeField] private Material shaderMaterial;
 
     //Default material to return objects to once the shader is disabled.
-    [SerializeField] private Material defaultMaterial; 
+    [SerializeField] private Material defaultMaterial;
 
     //Whether the shader is currently active
     private bool isActive = false;
@@ -23,6 +23,7 @@ public class effectShader : MonoBehaviour
     void Start()
     {
         isActive = false;
+        objects = new GameObject[0]; 
     }
 
     //Gets the tag name that this shader should be applied to objects with
@@ -53,14 +54,6 @@ public class effectShader : MonoBehaviour
     //Disables shader on object with matching tagName
     public void disableShader()
     {
-        if (isActive == false)
-        {
-            print("Shader is already disabled, skipping method.");
-            return;
-        }
-
-        findGameObjects(tagName);
-
         if (objects.Length <= 0)
         {
             print("Can't find objects with tag.");
@@ -69,9 +62,9 @@ public class effectShader : MonoBehaviour
 
         foreach (GameObject obj in objects)
         {
-            SpriteRenderer sr = obj.GetComponent<SpriteRenderer>(); 
+            SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
 
-            sr.material = shaderMaterial; 
+            sr.material = defaultMaterial;
         }
 
         isActive = false;
@@ -80,14 +73,6 @@ public class effectShader : MonoBehaviour
     //Enables shader on objects with the matching tagName
     public void enableShader()
     {
-        if (isActive == true)
-        {
-            print("Shader is already enabled, skipping method.");
-            return;
-        }
-        
-        findGameObjects(tagName);
-
         if (objects.Length <= 0)
         {
             print("Can't find objects with tag.");
@@ -96,11 +81,35 @@ public class effectShader : MonoBehaviour
 
         foreach (GameObject obj in objects)
         {
-            SpriteRenderer sr = obj.GetComponent<SpriteRenderer>(); 
+            SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
 
-            sr.material = defaultMaterial; 
+            sr.material = shaderMaterial;
         }
 
         isActive = true;
+    }
+
+    //Toggles shaders based on their current state
+    public void toggleShaders()
+    {
+        findGameObjects(tagName);
+
+        if (objects.Length <= 0)
+        {
+            print("Can't find objects with tag.");
+            return;
+        }
+
+
+        if (isActive)
+        {
+            print("Disabling shaders from toggle.");
+            disableShader();
+        }
+        else
+        {
+            print("Enabling shaders from toggle.");
+            enableShader();
+        }
     }
 }

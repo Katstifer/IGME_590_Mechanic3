@@ -67,18 +67,10 @@ public class shaderManager : MonoBehaviour
 
         print("Current shader: " + currentShader);
 
-        if (currentShader.IsActive() == true)
-        {
-            print("Shader is currently active.");
-            currentShader.disableShader();
-            shadersActive = false; 
-        }
-        else
-        {
-            print("Shader is inactive, enabling.");
-            currentShader.enableShader();
-            shadersActive = true; 
-        }
+        currentShader.toggleShaders(); 
+        shadersActive = currentShader.IsActive(); 
+
+        print("Shader active: " + shadersActive);
     }
 
     //Rotates to the next shader, disabling the previous one if active and enabling the new one.
@@ -95,18 +87,20 @@ public class shaderManager : MonoBehaviour
 
         if (currentShader.IsActive())
         {
-            print("Previous shader is active, disabling.");
-            //Disables the old shaders
-            currentShader.disableShader();
+            currentShader.disableShader();    
         }
 
         //Finds next in rotation and changes the current shader to be that.
         currentShader = shaders[currentIndex];
-        print("New shader tag: " + currentShader.GetTagName());
 
+        print("Shaders active? " + shadersActive);
         if (shadersActive)
         {
             currentShader.enableShader(); 
+        }
+        else
+        {
+            currentShader.disableShader(); 
         }
 
         print("Shaders rotated!");
